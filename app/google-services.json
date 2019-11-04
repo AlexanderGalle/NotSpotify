@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "76828815119",
+    "firebase_url": "https://not-spotify-bcac2.firebaseio.com",
+    "project_id": "not-spotify-bcac2",
+    "storage_bucket": "not-spotify-bcac2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:76828815119:android:24bf549447f26768ca987a",
+        "android_client_info": {
+          "package_name": "com.example.freespotify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "76828815119-vf4qv78qi5prgok3pt6labtsh1eijkdg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.freespotify",
+            "certificate_hash": "1b8cfce4da2cd1af824789bbe70e3f39b8e85899"
+          }
+        },
+        {
+          "client_id": "76828815119-s1vum0cuqnnu878aa6itsm2icruv52vq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXY-l1RXkDULxUbrdJRyNcPT6-1zPpsLg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "76828815119-s1vum0cuqnnu878aa6itsm2icruv52vq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

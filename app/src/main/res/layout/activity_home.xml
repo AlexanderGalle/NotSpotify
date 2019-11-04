@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HomeActivity"
+    android:id="@+id/homeActivity"
+    android:background="#000000"
+    android:padding="15sp">
+
+    <LinearLayout
+        android:layout_width="396dp"
+        android:layout_height="47dp"
+        android:orientation="horizontal"
+        android:id="@+id/titlebar"
+        >
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="41dp"
+            android:layout_height="45dp"
+            app:srcCompat="@drawable/icon" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:layout_marginLeft="10dp"
+            android:textColor="#F70000"
+            android:textSize="30dp"
+
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="91dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="65dp"
+            android:text="User Name"
+            android:textColor="#FEFFFD"
+            android:textSize="17dp" />
+
+
+    </LinearLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/text_outline"
+        android:id="@+id/appbar"
+        android:layout_below="@+id/titlebar"
+        >
+
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/appbar"
+            app:tabIndicatorColor="#FEFFFD"
+            app:tabTextColor="#F70000"
+            app:tabIndicatorFullWidth="false"
+
+            />
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="wrap_content"
+        android:layout_height="525dp"
+        android:layout_marginTop="104dp" />
+
+    <LinearLayout
+        android:id="@+id/now"
+        android:layout_width="381dp"
+        android:layout_height="49dp"
+        android:layout_below="@id/viewPager"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/text_outline"
+        android:paddingTop="3dp">
+
+
+        <TextView
+            android:id="@+id/playing_message"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="5dp"
+            android:paddingRight="15dp"
+            android:text="Now Playing: "
+            android:textColor="#F70000" />
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/viewPager"
+            android:orientation="vertical"
+
+
+            >
+
+            <TextView
+                android:id="@+id/current_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="No Song Playing"
+                android:textColor="#F70000" />
+
+            <TextView
+                android:id="@+id/current_artist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#F70000" />
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#000000"
+            android:src="@drawable/pause_button"
+            android:paddingTop="7dp"/>
+
+        <ImageButton
+            android:id="@+id/stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#000000"
+            android:src="@drawable/stop_button"
+            android:paddingTop="7dp"/>
+
+        <TextView
+            android:id="@+id/blank"
+            android:layout_width="wrap_content"
+            android:layout_height="6dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>
