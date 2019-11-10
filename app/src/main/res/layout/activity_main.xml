@@ -74,7 +74,7 @@
         android:background="@drawable/text_outline"
         android:ems="10"
         android:textSize="30dp"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:textColor="#FEFFFD"
 
         />

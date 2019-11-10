@@ -31,7 +31,6 @@ public class SignUpActivity extends AppCompatActivity {
     Button submit;
     EditText email,userName,pwd;
     FirebaseAuth mAuth;
-    //FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +45,6 @@ public class SignUpActivity extends AppCompatActivity {
         submit = findViewById(R.id.submitButton);
 
         mAuth = FirebaseAuth.getInstance();
-
-        //db = FirebaseFirestore.getInstance();
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,21 +65,6 @@ public class SignUpActivity extends AppCompatActivity {
                                         .setDisplayName(newUsername).build();
 
                                 user.updateProfile(profileUpdates);
-
-                                /*Map<String, Object> username = new HashMap<>();
-                                username.put("uid",user.getUid());
-                                username.put("username", newUsername);
-
-                                // Add a new document with a generated ID
-                                db.collection("accounts")
-                                        .add(username)
-                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                            @Override
-                                            public void onSuccess(DocumentReference documentReference) {
-                                                Toast.makeText(SignUpActivity.this, "Account Created",
-                                                        Toast.LENGTH_LONG).show();
-                                            }
-                                        });*/
 
                                 Intent returnIntent = new Intent();
                                 returnIntent.putExtra("email", user.getEmail());

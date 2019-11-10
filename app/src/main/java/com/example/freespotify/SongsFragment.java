@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.lifecycle.ViewModelProviders;
@@ -27,6 +28,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,6 +43,7 @@ import java.util.List;
 
 public class SongsFragment extends Fragment {
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     private List<Song> songs;
     private ArrayList<String> mNames = new ArrayList<>();
     private ArrayList<String> mArtist = new ArrayList<>();
@@ -48,6 +51,7 @@ public class SongsFragment extends Fragment {
     private RecyclerView recyclerView;
     private ProgressBar loading;
     private ShareViewModel viewModel;
+    private List<String> playlistNames = new ArrayList<>();
 
 
     @Override
@@ -63,6 +67,9 @@ public class SongsFragment extends Fragment {
 
         loading = getView().findViewById(R.id.loading);
         recyclerView = getView().findViewById(R.id.recyclerView);
+        mAuth = FirebaseAuth.getInstance();
+
+
         ReadSongs readSongs = new ReadSongs();
         readSongs.execute();
 
@@ -90,6 +97,15 @@ public class SongsFragment extends Fragment {
                         }
                     });
 
+                    db.collection(mAuth.getCurrentUser().getDisplayName()+"Playlist").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                                playlistNames.add(documentSnapshot.getString("name"));
+
+                            }
+                        }
+                    });
                     Thread.sleep(2000);
 
                     initialiseValues();
@@ -115,6 +131,7 @@ public class SongsFragment extends Fragment {
             loading.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
 
+
         }
 
         @Override
@@ -129,7 +146,7 @@ public class SongsFragment extends Fragment {
 
     private void initRecyclerView(){
         viewModel = ViewModelProviders.of(getActivity()).get(ShareViewModel.class);
-        Adapter adapter = new Adapter(mNames,mArtist,mLink,getContext(),getActivity(),viewModel);
+        Adapter adapter = new Adapter(mNames,mArtist,mLink,getContext(),getActivity(),viewModel,playlistNames);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
@@ -141,6 +158,29 @@ public class SongsFragment extends Fragment {
             mArtist.add(songs.get(i).getArtist());
             mLink.add(songs.get(i).getLink());
         }
+
+    }
+
+    public void onResume()
+    {
+        super.onResume();
+        ShareViewModel viewModel = ViewModelProviders.of(getActivity()).get(ShareViewModel.class);
+        if(viewModel.getUserPlaylists().getValue()!=null )
+        {
+            if(playlistNames.size() != viewModel.getUserPlaylists().getValue().size()) {
+                playlistNames.clear();
+                for (int i = 0;i<viewModel.getUserPlaylists().getValue().size();i++) {
+                    playlistNames.add(viewModel.getUserPlaylists().getValue().get(i).getPlaylistName());
+                }
+                FragmentTransaction refresh = getFragmentManager().beginTransaction();
+                refresh.detach(this);
+                refresh.attach(this);
+                refresh.commit();
+            }
+
+
+        }
+
 
     }
 

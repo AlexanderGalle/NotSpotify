@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:id="@+id/song"
+    android:id="@+id/playlist"
     android:paddingTop="20dp"
     >
 
@@ -34,11 +34,11 @@
             android:textSize="20dp" />
 
         <TextView
-            android:id="@+id/artist"
+            android:id="@+id/songCount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#000000"
-            android:text="Artist"
+            android:text="Song Count"
             android:textColor="#F70000"
             android:textSize="15dp" />
     </LinearLayout>
@@ -49,6 +49,7 @@
         android:layout_height="38dp"
         android:layout_weight="1"
         android:background="@drawable/menu_button"
-        android:layout_marginTop="5dp"/>
+        android:layout_marginTop="3dp"
+        />
 
 </LinearLayout>
