@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SearchRecentSuggestionsProvider;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,52 +13,46 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    Button submit;
-    EditText email,userName,pwd;
-    FirebaseAuth mAuth;
+    private Button gSubmit;
+    private EditText gEmail, gUserName, gPwd;
+    private FirebaseAuth gAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        email = findViewById(R.id.eEmail);
+        gEmail = findViewById(R.id.eEmail);
 
-        userName = findViewById(R.id.eUser);
+        gUserName = findViewById(R.id.eUser);
 
-        pwd = findViewById(R.id.ePwd);
+        gPwd = findViewById(R.id.ePwd);
 
-        submit = findViewById(R.id.submitButton);
+        gSubmit = findViewById(R.id.submitButton);
 
-        mAuth = FirebaseAuth.getInstance();
+        gAuth = FirebaseAuth.getInstance();
 
-        submit.setOnClickListener(new View.OnClickListener() {
+        gSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                submit.setBackgroundColor(Color.parseColor("#F70000"));
-                final String newEmail = email.getText().toString();
-                final String newUsername = userName.getText().toString();
-                final String newPwd = pwd.getText().toString();
+                gSubmit.setBackgroundColor(Color.parseColor("#F70000"));
+                final String newEmail = gEmail.getText().toString();
+                final String newUsername = gUserName.getText().toString();
+                final String newPwd = gPwd.getText().toString();
                 if (!TextUtils.isEmpty(newEmail) && !TextUtils.isEmpty(newPwd) && !TextUtils.isEmpty(newUsername)) {
 
-                    mAuth.createUserWithEmailAndPassword(newEmail, newPwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    gAuth.createUserWithEmailAndPassword(newEmail, newPwd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                FirebaseUser user = mAuth.getCurrentUser();
+                                FirebaseUser user = gAuth.getCurrentUser();
 
                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                         .setDisplayName(newUsername).build();
@@ -73,7 +66,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 finish();
 
                             } else {
-                                Toast.makeText(SignUpActivity.this, "Sign Up Failed, make sure you password contains at least 6 characters and your email exists",
+                                Toast.makeText(SignUpActivity.this, "Sign Up Failed, make sure you password contains at least 6 characters and your gEmail exists",
                                         Toast.LENGTH_LONG).show();
                             }
 

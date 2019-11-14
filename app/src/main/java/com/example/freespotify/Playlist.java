@@ -4,26 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Playlist {
-    private String name;
-    private List<String> songNames;
-    private List<Song> songs;
+    private String gName;
+    private List<String> gSongNames;
+    private List<Song> gSongs;
 
     public Playlist(String name, List<String> songNames){
-        this.name = name;
-        this.songNames = songNames;
-        this.songs = new ArrayList<>();
+        this.gName = name;
+        this.gSongNames = songNames;
+        this.gSongs = new ArrayList<>();
 
     }
 
-    public String getPlaylistName(){return name;}
+    public String getPlaylistName(){return gName;}
 
-    public void setPlaylistName(String input){this.name = input;}
+    public void setPlaylistName(String input){this.gName = input;}
 
-    public List<String> getSongNames(){return songNames;}
+    public List<String> getSongNames(){return gSongNames;}
 
-    public List<Song> getSongs(){return songs;}
-
-    public void addSong(Song input){this.songs.add(input);}
-
-    public void removeSong(Song input){this.songs.remove(input);}
+    public List<Song> getSongs(){return gSongs;}
+    
 }

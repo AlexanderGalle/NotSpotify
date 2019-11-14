@@ -1,49 +1,38 @@
 package com.example.freespotify;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RemoveAdapter extends RecyclerView.Adapter<RemoveAdapter.ViewHolder>{
 
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-    private ShareViewModel sViewModel;
-    private Context sContext;
-    private Activity sActivity;
-    private String selectPlaylist;
-    private AddToPlaylistFragment sFragment;
+    private FirebaseAuth gAuth;
+    private FirebaseFirestore gDb;
+    private ShareViewModel gViewModel;
+    private Context gContext;
+    private String gSelectPlaylist;
+    private AddToPlaylistFragment gFragment;
     private TextView title;
 
-    public RemoveAdapter(Context context, Activity activity,ShareViewModel viewModel,AddToPlaylistFragment fragment)
+    public RemoveAdapter(Context context,ShareViewModel viewModel,AddToPlaylistFragment fragment)
     {
-        sContext = context;
-        sActivity = activity;
-        sViewModel = viewModel;
-        sFragment = fragment;
+        gContext = context;
+        gViewModel = viewModel;
+        gFragment = fragment;
 
     }
 
@@ -61,33 +50,33 @@ public class RemoveAdapter extends RecyclerView.Adapter<RemoveAdapter.ViewHolder
     @Override
     public void onBindViewHolder(final RemoveAdapter.ViewHolder holder, final int position)
     {
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
-        title = sFragment.getView().findViewById(R.id.newPlaylistTitle);
+        gAuth = FirebaseAuth.getInstance();
+        gDb = FirebaseFirestore.getInstance();
+        title = gFragment.getView().findViewById(R.id.newPlaylistTitle);
 
         title.setText("Remove From");
 
-        holder.name.setText(sViewModel.getUserPlaylists().getValue().get(position).getPlaylistName());
+        holder.name.setText(gViewModel.getUserPlaylists().getValue().get(position).getPlaylistName());
 
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                selectPlaylist = sViewModel.getUserPlaylists().getValue().get(position).getPlaylistName();
+                gSelectPlaylist = gViewModel.getUserPlaylists().getValue().get(position).getPlaylistName();
 
-                if(sViewModel.getUserPlaylists().getValue().get(position).getSongNames().contains(sViewModel.getSelectedSong().getValue())) {
-                    db.collection(mAuth.getCurrentUser().getDisplayName() + "Playlist").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                if(gViewModel.getUserPlaylists().getValue().get(position).getSongNames().contains(gViewModel.getSelectedSong().getValue())) {
+                    gDb.collection(gAuth.getCurrentUser().getDisplayName() + "Playlist").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                if (documentSnapshot.getString("name").equals(selectPlaylist)) {
+                                if (documentSnapshot.getString("name").equals(gSelectPlaylist)) {
                                     int j =1;
                                     while(j<documentSnapshot.getData().size()) {
 
-                                        if (sViewModel.getSelectedSong().getValue().equals(documentSnapshot.getString("song" + j))) {
+                                        if (gViewModel.getSelectedSong().getValue().equals(documentSnapshot.getString("song" + j))) {
 
-                                            sViewModel.getUserPlaylists().getValue().get(position).getSongNames()
+                                            gViewModel.getUserPlaylists().getValue().get(position).getSongNames()
                                                     .remove(documentSnapshot.getString("song" + j));
                                             break;
                                         }
@@ -95,21 +84,21 @@ public class RemoveAdapter extends RecyclerView.Adapter<RemoveAdapter.ViewHolder
                                     }
 
                                     Map<String, Object> deleteSong = new HashMap<>();
-                                    deleteSong.put("name", selectPlaylist);
-                                    for (int k=0;k<sViewModel.getUserPlaylists().getValue().get(position).getSongNames().size();k++)
+                                    deleteSong.put("name", gSelectPlaylist);
+                                    for (int k=0;k<gViewModel.getUserPlaylists().getValue().get(position).getSongNames().size();k++)
                                     {
 
-                                        deleteSong.put("song"+(k+1),sViewModel.getUserPlaylists().getValue().get(position).getSongNames().get(k));
+                                        deleteSong.put("song"+(k+1),gViewModel.getUserPlaylists().getValue().get(position).getSongNames().get(k));
                                     }
 
-                                    db.collection(mAuth.getCurrentUser().getDisplayName() + "Playlist").document(documentSnapshot.getId()).set(deleteSong);
+                                    gDb.collection(gAuth.getCurrentUser().getDisplayName() + "Playlist").document(documentSnapshot.getId()).set(deleteSong);
 
 
-                                    Toast toast = Toast.makeText(sContext, "Song Removed from " + selectPlaylist, Toast.LENGTH_SHORT);
+                                    Toast toast = Toast.makeText(gContext, "Song Removed from " + gSelectPlaylist, Toast.LENGTH_SHORT);
                                     toast.setGravity(Gravity.CENTER, 0, 100);
                                     toast.show();
 
-                                    ParentPlaylist parent = (ParentPlaylist)sFragment.getParentFragment();
+                                    ParentPlaylist parent = (ParentPlaylist)gFragment.getParentFragment();
 
                                     PlaylistsFragment playlistsFragment = new PlaylistsFragment();
 
@@ -126,7 +115,7 @@ public class RemoveAdapter extends RecyclerView.Adapter<RemoveAdapter.ViewHolder
 
                 }
                 else {
-                    Toast toast = Toast.makeText(sContext, "This is song is not in " + selectPlaylist, Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(gContext, "This is song is not in " + gSelectPlaylist, Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 150);
                     toast.show();
                 }
@@ -142,7 +131,7 @@ public class RemoveAdapter extends RecyclerView.Adapter<RemoveAdapter.ViewHolder
     @Override
     public int getItemCount()
     {
-        return sViewModel.getUserPlaylists().getValue().size();
+        return gViewModel.getUserPlaylists().getValue().size();
     }
 
 

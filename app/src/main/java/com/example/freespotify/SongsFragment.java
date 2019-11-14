@@ -1,57 +1,37 @@
 package com.example.freespotify;
 
-import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
-import android.net.Uri;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SharedMemory;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.lifecycle.ViewModelProviders;
-
-
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.io.Console;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SongsFragment extends Fragment {
-    private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
-    private List<Song> songs;
-    private ArrayList<String> mNames = new ArrayList<>();
-    private ArrayList<String> mArtist = new ArrayList<>();
-    private ArrayList<String> mLink = new ArrayList<>();
-    private RecyclerView recyclerView;
-    private ProgressBar loading;
-    private ShareViewModel viewModel;
-    private List<String> playlistNames = new ArrayList<>();
+    private FirebaseFirestore gDb;
+    private FirebaseAuth gAuth;
+    private List<Song> gSongs;
+    private ArrayList<String> gNames = new ArrayList<>();
+    private ArrayList<String> gArtist = new ArrayList<>();
+    private ArrayList<String> gLink = new ArrayList<>();
+    private RecyclerView gRecyclerView;
+    private ProgressBar gLoading;
+    private ShareViewModel gViewModel;
+    private List<String> gPlaylistNames = new ArrayList<>();
 
 
     @Override
@@ -65,9 +45,9 @@ public class SongsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        loading = getView().findViewById(R.id.loading);
-        recyclerView = getView().findViewById(R.id.recyclerView);
-        mAuth = FirebaseAuth.getInstance();
+        gLoading = getView().findViewById(R.id.loading);
+        gRecyclerView = getView().findViewById(R.id.recyclerView);
+        gAuth = FirebaseAuth.getInstance();
 
 
         ReadSongs readSongs = new ReadSongs();
@@ -82,26 +62,26 @@ public class SongsFragment extends Fragment {
 
 
             try {
-                if(songs == null) {
-                    songs = new ArrayList<>();
+                if(gSongs == null) {
+                    gSongs = new ArrayList<>();
 
-                    db = FirebaseFirestore.getInstance();
-                    db.collection("songs").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    gDb = FirebaseFirestore.getInstance();
+                    gDb.collection("songs").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                                 Song song = new Song(documentSnapshot.getString("name"), documentSnapshot.getString("artist")
                                         , documentSnapshot.getString("link"), documentSnapshot.getString("time"));
-                                songs.add(song);
+                                gSongs.add(song);
                             }
                         }
                     });
 
-                    db.collection(mAuth.getCurrentUser().getDisplayName()+"Playlist").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    gDb.collection(gAuth.getCurrentUser().getDisplayName()+"Playlist").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                playlistNames.add(documentSnapshot.getString("name"));
+                                gPlaylistNames.add(documentSnapshot.getString("name"));
 
                             }
                         }
@@ -125,19 +105,19 @@ public class SongsFragment extends Fragment {
         @Override
         protected void onProgressUpdate(Integer... values) {
 
-            if(songs != null) {
+            if(gSongs != null) {
                 initRecyclerView();
             }
-            loading.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+            gLoading.setVisibility(View.GONE);
+            gRecyclerView.setVisibility(View.VISIBLE);
 
 
         }
 
         @Override
         protected void onPreExecute() {
-            recyclerView.setVisibility(View.GONE);
-            loading.setVisibility(View.VISIBLE);
+            gRecyclerView.setVisibility(View.GONE);
+            gLoading.setVisibility(View.VISIBLE);
 
         }
 
@@ -145,18 +125,18 @@ public class SongsFragment extends Fragment {
 
 
     private void initRecyclerView(){
-        viewModel = ViewModelProviders.of(getActivity()).get(ShareViewModel.class);
-        Adapter adapter = new Adapter(mNames,mArtist,mLink,getContext(),getActivity(),viewModel,playlistNames);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        gViewModel = ViewModelProviders.of(getActivity()).get(ShareViewModel.class);
+        Adapter adapter = new Adapter(gNames, gArtist, gLink,getContext(),getActivity(), gViewModel);
+        gRecyclerView.setAdapter(adapter);
+        gRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void initialiseValues(){
-        for (int i = 0;i<songs.size();i++)
+        for (int i = 0; i< gSongs.size(); i++)
         {
-            mNames.add(songs.get(i).getName());
-            mArtist.add(songs.get(i).getArtist());
-            mLink.add(songs.get(i).getLink());
+            gNames.add(gSongs.get(i).getName());
+            gArtist.add(gSongs.get(i).getArtist());
+            gLink.add(gSongs.get(i).getLink());
         }
 
     }
@@ -167,10 +147,10 @@ public class SongsFragment extends Fragment {
         ShareViewModel viewModel = ViewModelProviders.of(getActivity()).get(ShareViewModel.class);
         if(viewModel.getUserPlaylists().getValue()!=null )
         {
-            if(playlistNames.size() != viewModel.getUserPlaylists().getValue().size()) {
-                playlistNames.clear();
+            if(gPlaylistNames.size() != viewModel.getUserPlaylists().getValue().size()) {
+                gPlaylistNames.clear();
                 for (int i = 0;i<viewModel.getUserPlaylists().getValue().size();i++) {
-                    playlistNames.add(viewModel.getUserPlaylists().getValue().get(i).getPlaylistName());
+                    gPlaylistNames.add(viewModel.getUserPlaylists().getValue().get(i).getPlaylistName());
                 }
                 FragmentTransaction refresh = getFragmentManager().beginTransaction();
                 refresh.detach(this);

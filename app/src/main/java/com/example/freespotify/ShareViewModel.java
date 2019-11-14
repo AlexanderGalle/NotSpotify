@@ -6,84 +6,84 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.firebase.auth.FirebaseAuth;
-
-import java.util.Date;
 import java.util.List;
 
 public class ShareViewModel extends ViewModel {
-    private MutableLiveData<String> currentName = new MutableLiveData<>();
-    private MutableLiveData<String> currentArtist = new MutableLiveData<>();
-    private MutableLiveData<Integer> position = new MutableLiveData<>();
-    private MutableLiveData<Integer> playlistPosition = new MutableLiveData<>();
-    private MutableLiveData<MediaPlayer> currentPlayer = new MutableLiveData<>();
-    private MutableLiveData<List<Playlist>> userPlaylists = new MutableLiveData<>();
-    private MutableLiveData<ParentPlaylist> parent = new MutableLiveData<>();
-    private MutableLiveData<String> selectedSong = new MutableLiveData<>();
+    private MutableLiveData<String> gCurrentName = new MutableLiveData<>();
+    private MutableLiveData<String> gCurrentArtist = new MutableLiveData<>();
+    private MutableLiveData<Integer> gPosition = new MutableLiveData<>();
+    private MutableLiveData<Integer> gPlaylistPosition = new MutableLiveData<>();
+    private MutableLiveData<MediaPlayer> gCurrentPlayer = new MutableLiveData<>();
+    private MutableLiveData<List<Playlist>> gUserPlaylists = new MutableLiveData<>();
+    private MutableLiveData<ParentPlaylist> gParent = new MutableLiveData<>();
+    private MutableLiveData<String> gSelectedSong = new MutableLiveData<>();
 
 
 
     public void setCurrentPlayer(MediaPlayer input)
     {
-        currentPlayer.setValue(input);
+        gCurrentPlayer.setValue(input);
     }
 
     public LiveData<MediaPlayer> getCurrentPlayer()
     {
-        return currentPlayer;
+        return gCurrentPlayer;
     }
 
     public void setCurrentName(String input)
     {
-        currentName.setValue(input);
+        gCurrentName.setValue(input);
     }
 
     public LiveData<String> getCurrentName()
     {
-        return currentName;
+        return gCurrentName;
     }
 
     public void setCurrentArtist(String input)
     {
-        currentArtist.setValue(input);
+        gCurrentArtist.setValue(input);
     }
 
     public LiveData<String> getCurrentArtist()
     {
-        return currentArtist;
+        return gCurrentArtist;
     }
 
     public void setPosition(Integer input)
     {
-        position.setValue(input);
+        gPosition.setValue(input);
     }
 
     public LiveData<Integer> getPosition()
     {
-        return position;
+        return gPosition;
     }
 
     public void setPlaylistPosition(Integer input)
     {
-        playlistPosition.setValue(input);
+        gPlaylistPosition.setValue(input);
     }
 
     public LiveData<Integer> getPlaylistPosition()
     {
-        return playlistPosition;
+        return gPlaylistPosition;
     }
 
-    public void setUserPlaylists(List<Playlist> input){userPlaylists.setValue(input);}
+    public void setUserPlaylists(List<Playlist> input){
+        gUserPlaylists.setValue(input);}
 
-    public LiveData<List<Playlist>> getUserPlaylists(){return userPlaylists;}
+    public LiveData<List<Playlist>> getUserPlaylists(){return gUserPlaylists;}
 
-    public void setParent(ParentPlaylist input){parent.setValue(input);}
+    public void setParent(ParentPlaylist input){
+        gParent.setValue(input);}
 
-    public LiveData<ParentPlaylist> getParent(){return parent;}
+    public LiveData<ParentPlaylist> getParent(){return gParent;}
 
-    public void setSelectedSong(String input){selectedSong.setValue(input);}
+    public void setSelectedSong(String input){
+        gSelectedSong.setValue(input);}
 
-    public LiveData<String> getSelectedSong(){return selectedSong;}
+    public LiveData<String> getSelectedSong(){return gSelectedSong;}
 
 
 

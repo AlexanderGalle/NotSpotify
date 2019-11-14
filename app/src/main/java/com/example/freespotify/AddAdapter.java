@@ -1,46 +1,38 @@
 package com.example.freespotify;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class AddAdapter extends RecyclerView.Adapter<AddAdapter.ViewHolder>{
 
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-    private ShareViewModel sViewModel;
-    private Context sContext;
-    private Activity sActivity;
-    private String selectPlaylist;
-    private AddToPlaylistFragment sFragment;
-    private TextView title;
+    private FirebaseAuth gAuth;
+    private FirebaseFirestore gDb;
+    private ShareViewModel gViewModel;
+    private Context gContext;
+    private String gSelectPlaylist;
+    private AddToPlaylistFragment gFragment;
 
-    public AddAdapter(Context context, Activity activity,ShareViewModel viewModel,AddToPlaylistFragment fragment)
+
+    public AddAdapter(Context context,ShareViewModel viewModel,AddToPlaylistFragment fragment)
     {
-        sContext = context;
-        sActivity = activity;
-        sViewModel = viewModel;
-        sFragment = fragment;
+        gContext = context;
+        gViewModel = viewModel;
+        gFragment = fragment;
 
     }
 
@@ -58,40 +50,41 @@ public class AddAdapter extends RecyclerView.Adapter<AddAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(final AddAdapter.ViewHolder holder, final int position)
     {
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        gAuth = FirebaseAuth.getInstance();
+        gDb = FirebaseFirestore.getInstance();
+        TextView title;
 
-        title = sFragment.getView().findViewById(R.id.newPlaylistTitle);
+        title = gFragment.getView().findViewById(R.id.newPlaylistTitle);
 
         title.setText("Add to");
 
-        holder.name.setText(sViewModel.getUserPlaylists().getValue().get(position).getPlaylistName());
+        holder.name.setText(gViewModel.getUserPlaylists().getValue().get(position).getPlaylistName());
 
         holder.name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                selectPlaylist = sViewModel.getUserPlaylists().getValue().get(position).getPlaylistName();
+                gSelectPlaylist = gViewModel.getUserPlaylists().getValue().get(position).getPlaylistName();
 
-                if(!sViewModel.getUserPlaylists().getValue().get(position).getSongNames().contains(sViewModel.getSelectedSong().getValue())) {
-                    db.collection(mAuth.getCurrentUser().getDisplayName() + "Playlist").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                if(!gViewModel.getUserPlaylists().getValue().get(position).getSongNames().contains(gViewModel.getSelectedSong().getValue())) {
+                    gDb.collection(gAuth.getCurrentUser().getDisplayName() + "Playlist").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
                             for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                                if (documentSnapshot.getString("name").equals(selectPlaylist)) {
+                                if (documentSnapshot.getString("name").equals(gSelectPlaylist)) {
 
                                     Map<String, Object> newSong = new HashMap<>();
-                                    newSong.put("song" + (documentSnapshot.getData().size()), sViewModel.getSelectedSong().getValue());
+                                    newSong.put("song" + (documentSnapshot.getData().size()), gViewModel.getSelectedSong().getValue());
 
-                                    db.collection(mAuth.getCurrentUser().getDisplayName() + "Playlist").document(documentSnapshot.getId()).update(newSong);
-                                    sViewModel.getUserPlaylists().getValue().get(position).getSongNames().add(sViewModel.getSelectedSong().getValue());
+                                    gDb.collection(gAuth.getCurrentUser().getDisplayName() + "Playlist").document(documentSnapshot.getId()).update(newSong);
+                                    gViewModel.getUserPlaylists().getValue().get(position).getSongNames().add(gViewModel.getSelectedSong().getValue());
 
-                                    Toast toast = Toast.makeText(sContext, "Song added to " + selectPlaylist, Toast.LENGTH_SHORT);
+                                    Toast toast = Toast.makeText(gContext, "Song added to " + gSelectPlaylist, Toast.LENGTH_SHORT);
                                     toast.setGravity(Gravity.CENTER, 0, 100);
                                     toast.show();
 
-                                    ParentPlaylist parent = (ParentPlaylist)sFragment.getParentFragment();
+                                    ParentPlaylist parent = (ParentPlaylist)gFragment.getParentFragment();
 
                                     PlaylistsFragment playlistsFragment = new PlaylistsFragment();
 
@@ -108,7 +101,7 @@ public class AddAdapter extends RecyclerView.Adapter<AddAdapter.ViewHolder>{
 
                 }
                 else {
-                    Toast toast = Toast.makeText(sContext, "This song is already in " + selectPlaylist, Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(gContext, "This song is already in " + gSelectPlaylist, Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 150);
                     toast.show();
                 }
@@ -124,7 +117,7 @@ public class AddAdapter extends RecyclerView.Adapter<AddAdapter.ViewHolder>{
     @Override
     public int getItemCount()
     {
-        return sViewModel.getUserPlaylists().getValue().size();
+        return gViewModel.getUserPlaylists().getValue().size();
     }
 
 

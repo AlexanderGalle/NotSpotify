@@ -1,7 +1,6 @@
 package com.example.freespotify;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,25 +10,18 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.List;
 
 public class AddToPlaylistFragment extends Fragment {
 
-    private ShareViewModel viewModel;
-    private ImageButton close;
-    private RecyclerView recyclerView;
-    private String layout;
+    private ShareViewModel gViewModel;
+    private RecyclerView gRecyclerView;
+    private String gLayout;
 
-    public AddToPlaylistFragment(String Layout)
+    public AddToPlaylistFragment(String layout)
     {
-        layout = Layout;
+        gLayout = layout;
     }
 
     @Override
@@ -42,7 +34,9 @@ public class AddToPlaylistFragment extends Fragment {
 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        recyclerView = getView().findViewById(R.id.recyclerView);
+        gRecyclerView = getView().findViewById(R.id.recyclerView);
+
+        ImageButton close;
         close = getView().findViewById(R.id.close);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,16 +56,16 @@ public class AddToPlaylistFragment extends Fragment {
     }
 
     private void initRecyclerView(){
-        viewModel = ViewModelProviders.of(getActivity()).get(ShareViewModel.class);
-        if(layout == "Add") {
-            AddAdapter adapter = new AddAdapter(getContext(), getActivity(), viewModel, this);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        gViewModel = ViewModelProviders.of(getActivity()).get(ShareViewModel.class);
+        if(gLayout == "Add") {
+            AddAdapter adapter = new AddAdapter(getContext(), gViewModel, this);
+            gRecyclerView.setAdapter(adapter);
+            gRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
-        else if(layout == "Remove") {
-            RemoveAdapter adapter = new RemoveAdapter(getContext(),getActivity(),viewModel,this);
-            recyclerView.setAdapter(adapter);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        else if(gLayout == "Remove") {
+            RemoveAdapter adapter = new RemoveAdapter(getContext(),gViewModel,this);
+            gRecyclerView.setAdapter(adapter);
+            gRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
 
     }

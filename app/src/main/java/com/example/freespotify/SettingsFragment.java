@@ -11,24 +11,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsFragment extends Fragment {
-    Button logout,confirm;
-    EditText email;
-    TextView resetPwd;
-    FirebaseAuth mAuth;
-    ShareViewModel viewModel;
+    private Button gLogout, gConfirm;
+    private EditText gEmail;
+    private TextView gResetPwd;
+    private FirebaseAuth gAuth;
+    private ShareViewModel gViewModel;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstance) {
         if (container == null) {
@@ -41,25 +38,25 @@ public class SettingsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState)
     {
         super.onActivityCreated(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
-        email = getView().findViewById(R.id.changeEmail);
-        resetPwd = getView().findViewById(R.id.PwdTitle);
+        gAuth = FirebaseAuth.getInstance();
+        gEmail = getView().findViewById(R.id.changeEmail);
+        gResetPwd = getView().findViewById(R.id.PwdTitle);
 
-        email.setText(mAuth.getCurrentUser().getEmail());
-        confirm = getView().findViewById(R.id.confrim);
+        gEmail.setText(gAuth.getCurrentUser().getEmail());
+        gConfirm = getView().findViewById(R.id.confrim);
 
-        logout= getView().findViewById(R.id.logOut);
+        gLogout= getView().findViewById(R.id.logOut);
 
-        viewModel = ViewModelProviders.of(getActivity()).get(ShareViewModel.class);
+        gViewModel = ViewModelProviders.of(getActivity()).get(ShareViewModel.class);
 
-        resetPwd.setOnClickListener(new View.OnClickListener() {
+        gResetPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                resetPwd.setTextColor(Color.parseColor("#F70000"));
+                gResetPwd.setTextColor(Color.parseColor("#F70000"));
 
-                String emailAddress = mAuth.getCurrentUser().getEmail();
+                String emailAddress = gAuth.getCurrentUser().getEmail();
 
-                mAuth.sendPasswordResetEmail(emailAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
+                gAuth.sendPasswordResetEmail(emailAddress).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
@@ -75,11 +72,11 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        confirm.setOnClickListener(new View.OnClickListener() {
+        gConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!TextUtils.isEmpty(email.getText().toString()) ){
-                    mAuth.getCurrentUser().updateEmail(email.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                if (!TextUtils.isEmpty(gEmail.getText().toString()) ){
+                    gAuth.getCurrentUser().updateEmail(gEmail.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(getContext(),"Email Updated",Toast.LENGTH_SHORT).show();
@@ -96,11 +93,11 @@ public class SettingsFragment extends Fragment {
         });
 
 
-        logout.setOnClickListener(new View.OnClickListener() {
+        gLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ReleasePlayer();
-                mAuth.signOut();
+                gAuth.signOut();
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 startActivity(intent);
                 Toast.makeText(getActivity(), "You have logged out successfully", Toast.LENGTH_LONG).show();
@@ -111,10 +108,10 @@ public class SettingsFragment extends Fragment {
     }
 
     private void ReleasePlayer(){
-        if (viewModel.getCurrentPlayer().getValue() != null)
+        if (gViewModel.getCurrentPlayer().getValue() != null)
         {
-            viewModel.getCurrentPlayer().getValue().release();
-            viewModel.setCurrentPlayer(null);
+            gViewModel.getCurrentPlayer().getValue().release();
+            gViewModel.setCurrentPlayer(null);
         }
     }
 
